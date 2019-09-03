@@ -1,14 +1,17 @@
+from page import Page
+
+
 class Engine(object):
     def __init__(self):
         self._index = {}
-        self._search_count = 0
+        self._search_counter = 0
 
-    def index(self, page):
-        for words in page.words:
-            if words in self._index:
-                self._index[words] = self._index[words].union({page})
+    def index(self, page: Page):
+        for word in page.words:
+            if word in self._index:
+                self._index[word].add(page)
             else:
-                self._index[words] = {page}
+                self._index[word] = {page}
 
     def indexed_url(self):
         urls = set()
@@ -24,8 +27,13 @@ class Engine(object):
     def single_search(self, word):
         res = self._index.get(word.lower())
         if res:
-            return [x.url for x in res]
+            return [x for x in res]
 
-    def multiple_search(self, words, and_mode=True): # TODO: Refactor
-        result, urls = set(), [self.single_search(word) for word in words]
-        return list(result & set(urls)) if and_mode else list(result + set(urls))
+    def multiple_search(self, words, and_mode=True):  # TODO: Refactor
+        results = set()
+        for word in words:
+            ask = self.single_search(word)
+            if ask:
+                for item in ask:
+                    results.add(item)
+        return results if and_mode else results

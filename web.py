@@ -35,6 +35,7 @@ if __name__ == '__main__':
     engine.index(page2)
 
     print(engine.indexed_url())
+    print(engine.indexed_words())
     print(engine.single_search("upgrade"))
     print(engine.multiple_search(("upgrade", "international")))
 

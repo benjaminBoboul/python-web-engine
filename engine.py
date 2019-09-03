@@ -11,10 +11,14 @@ class Engine(object):
                 self._index[words] = self._index[words].add(page)
 
     def indexed_url(self):
-        return self._index.values()
+        urls = set()
+        for page_set in self._index.values():
+            page_url = [x.url for x in page_set]
+            urls = urls.union(page_url)
+        return urls
 
     def indexed_words(self):
-        return self._index.keys()
+        return {x for x in self._index.keys()}
 
     def single_search(self, word):
         return self._index[word.lower()] or None

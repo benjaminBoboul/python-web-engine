@@ -1,15 +1,14 @@
 from urllib.parse import urlparse as up
 import bs4
-import requests as r
+from requests import get
 import string
 
 
 def download(url: string):
-    parsed_url = up(url)
-    if parsed_url.scheme in ["http", "https"] and parsed_url.netloc != '':
-        page = r.get(parsed_url.geturl())
-        if page.status_code == 200:
-            return parsed_url.geturl(), page.status_code, page.content
+    pu = up(url)
+    page = get(pu.geturl()) if pu.scheme in ["http", "https"] and pu.netloc != '' else None
+    content = page.content if page.status_code == 200 else None
+    return pu.geturl(), page.status_code, content
 
 
 def parseDescription(content):
@@ -26,14 +25,11 @@ def extractKeywords(sentence: string):
 
 def search(url: string):
     socket, status, content = download(url)
-    description = parseDescription(content)
-    parsed_description = extractKeywords(description)
+    description = parseDescription(content) if content else None
+    parsed_description = extractKeywords(description) if description else None
     print(socket, status, description, parsed_description)
 
 
 if __name__ == '__main__':
-    search("https://korben.info/")
-    search("https://www.google.fr/")
-    search("http://www.lemonde.fr/")
-    search("https://www.lemonde.fr/societe/live/2019/09/03/que-faut-il-attendre-du-grenelle-des-violences-conjugales-posez-vos-questions_5505754_3224.html")
-    search("http://imt-lille-douai.fr/")
+    for line in open("urls.txt").readlines():
+        search(up(line.strip()).geturl())

@@ -2,7 +2,7 @@ from urllib.parse import urlparse as up
 import bs4
 from requests import get
 import string
-
+from page import Page
 
 def download(url: string):
     pu = up(url)
@@ -27,7 +27,8 @@ def search(url: string):
     socket, status, content = download(url)
     description = parseDescription(content) if content else None
     parsed_description = extractKeywords(description) if description else None
-    print(socket, status, description, parsed_description)
+    page = Page(socket, description, parsed_description)
+    print(page)
 
 
 if __name__ == '__main__':

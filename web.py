@@ -3,6 +3,7 @@ import bs4
 from requests import get
 import string
 from page import Page
+from engine import Engine
 
 
 def download(url: string):
@@ -21,12 +22,19 @@ def parseDescription(content):
 def search(url: string):
     socket, status, content = download(url)
     description = parseDescription(content) if content else None
-    page = Page(socket, description)
-    print(page)
+    return Page(socket, description)
 
 
 if __name__ == '__main__':
     """for line in open("urls.txt").readlines():
         search(up(line.strip()).geturl())"""
-    search("https://korben.info/")
-    search("https://www.lemonde.fr/")
+    engine = Engine()
+    page1 = search("https://korben.info/")
+    engine.index(page1)
+    page2 = search("https://www.lemonde.fr/")
+    engine.index(page2)
+
+    print(engine.indexed_url())
+    print(engine.single_search("upgrade"))
+    print(engine.multiple_search(("upgrade", "international")))
+

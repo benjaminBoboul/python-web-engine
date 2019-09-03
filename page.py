@@ -6,8 +6,9 @@ class Page(object):
         self._url = url
         self._description = description
         self._words = []
-        if len(self._description) != 0:
-            self._extract_words()
+        if self._description:
+            if len(self._description) != 0:
+                self._extract_words()
 
     @property
     def url(self):
@@ -25,6 +26,5 @@ class Page(object):
         return "url: {},\ndescription: {},\nkeywords: {}".format(self._url, self._description, self._words)
 
     def _extract_words(self):
-        self._words = self._description
-        for c in list(string.punctuation)+['…']: self._words.replace(c, '')
-        self._words = [x.lower() for x in self._description.split()]
+        words = ''.join(c for c in self._description if c not in list(string.punctuation)+['…', '“', '”'])
+        self._words = [x.lower() for x in words.split()]

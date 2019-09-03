@@ -26,16 +26,15 @@ def search(url: string):
 
 
 if __name__ == '__main__':
-    """for line in open("urls.txt").readlines():
-        search(up(line.strip()).geturl())"""
     engine = Engine()
-    page1 = search("https://korben.info/")
-    engine.index(page1)
-    page2 = search("https://www.lemonde.fr/")
-    engine.index(page2)
+    for line in open("urls.txt").readlines():
+        page = search(up(line.strip()).geturl())
+        if page.description:
+            engine.index(page)
 
     print(engine.indexed_url())
     print(engine.indexed_words())
-    print(engine.single_search("upgrade"))
-    print(engine.multiple_search(("upgrade", "international")))
+    print("Recherche get :\n", engine.single_search("get"))
+    # print("Recherche multiple sans corrélation :\n", engine.multiple_search(["upgrade", "international"], False))
+    # print("Recherche multiple avec corrélation :\n", engine.multiple_search(["upgrade", "international"]))
 

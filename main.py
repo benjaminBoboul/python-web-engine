@@ -10,7 +10,7 @@ if __name__ == '__main__':
     pp(engine.indexed_url())
 
     keyword = "guns"
-    keywords = ["over"]
+    keywords = ["japanese"]
 
     pp(engine.single_search(keyword))
     pp(engine.multiple_search(keywords))

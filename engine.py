@@ -27,9 +27,9 @@ class Engine(object):
     def single_search(self, word):
         res = self._index.get(word.lower())
         if res:
-            return [x for x in res]
+            return [x.url for x in res]
 
-    def multiple_search(self, words, and_mode=True):  # TODO: Refactor
+    def multiple_search(self, words, and_mode=True):
         results = set()
         for word in words:
             ask = self.single_search(word)

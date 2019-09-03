@@ -15,7 +15,7 @@ def download(url: string):
 def parseDescription(content):
     soup = bs4.BeautifulSoup(content, 'html.parser')
     property_description = soup.find('meta', {'property': 'og:description'})
-    return property_description.get('content') if property_description else None
+    return property_description.get('content').strip() if property_description else None
 
 
 def extractKeywords(sentence: string):
@@ -35,4 +35,5 @@ if __name__ == '__main__':
     search("https://korben.info/")
     search("https://www.google.fr/")
     search("http://www.lemonde.fr/")
+    search("https://www.lemonde.fr/societe/live/2019/09/03/que-faut-il-attendre-du-grenelle-des-violences-conjugales-posez-vos-questions_5505754_3224.html")
     search("http://imt-lille-douai.fr/")

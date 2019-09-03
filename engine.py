@@ -22,8 +22,10 @@ class Engine(object):
         return {x for x in self._index.keys()}
 
     def single_search(self, word):
-        return self._index.get(word.lower(), None)
+        res = self._index.get(word.lower())
+        if res:
+            return [x.url for x in res]
 
-    def multiple_search(self, words, and_mode=True):
-        if not and_mode:
-            return [self.single_search(word) for word in words]
+    def multiple_search(self, words, and_mode=True): # TODO: Refactor
+        result, urls = set(), [self.single_search(word) for word in words]
+        return list(result & set(urls)) if and_mode else list(result + set(urls))

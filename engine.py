@@ -1,17 +1,28 @@
 from page import Page
-
+import string
 
 class Engine(object):
     def __init__(self):
         self._index = {}
         self._search_counter = 0
 
+    def _extract_occurency(self, page: Page, keyword: string):
+        pass
+
     def index(self, page: Page):
-        for word in page.words:
-            if word in self._index:
-                self._index[word].add(page)
+        for tag in page.words:
+            if tag in self._index:
+                self._index[tag].add(page)
             else:
-                self._index[word] = {page}
+                self._index[tag] = {page}
+
+    def deindex(self, page: Page):
+        for tag in page.words:
+            if tag in self._index:
+                if len(self._index[tag]) > 1 and page in self._index[tag]:
+                    self._index[tag].remove(page)
+                elif len(self._index[tag]) == 1 and page is self._index[tag]:
+                    del(self._index[tag])
 
     def indexed_url(self):
         urls = set()
@@ -27,7 +38,7 @@ class Engine(object):
     def single_search(self, word):
         res = self._index.get(word.lower())
         if res:
-            return [x.url for x in res]
+            return [x for x in res]
 
     def multiple_search(self, words, and_mode=True):
         results = set()

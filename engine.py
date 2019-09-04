@@ -19,10 +19,13 @@ class Engine(object):
     def deindex(self, page: Page):
         for tag in page.words:
             if tag in self._index:
-                if len(self._index[tag]) > 1 and page in self._index[tag]:
+                if page in self._index[tag]:
                     self._index[tag].remove(page)
-                elif len(self._index[tag]) == 1 and page is self._index[tag]:
-                    del(self._index[tag])
+
+                # if len(self._index[tag]) > 1 and page in self._index[tag]:
+                #     self._index[tag].remove(page)
+                # elif len(self._index[tag]) == 1 and page is self._index[tag]:
+                #     del(self._index[tag])
 
     def indexed_url(self):
         urls = set()

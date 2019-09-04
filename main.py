@@ -7,7 +7,8 @@ if __name__ == '__main__':
     for url in open("urls.txt").readlines():
         engine.index(web.search(url.strip()))
 
-    engine.index(web.search("https://www.lemonde.fr/"))
+    page = web.search("https://www.lemonde.fr/")
+    engine.index(page)
     print(engine.indexed_words())
     pp(engine.indexed_url())
 
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     pp(engine.multiple_search(keywords, False))
 
     pp(engine.single_search("international"))
-    engine.deindex(web.search("https://www.lemonde.fr/"))
+    engine.deindex(page)
     pp(engine.single_search("international"))
 
     pp(engine.indexed_url())

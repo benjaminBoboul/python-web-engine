@@ -7,13 +7,15 @@ from pprint import pprint as pp
 
 if __name__ == '__main__':
     engine = Engine()
+    pg = lambda x: print(colored(x.upper(), "green"))
     for url in open("urls.txt").readlines():
-        engine.index(web.search(url.strip()))
+        page = web.search(url.strip())
+        engine.index(page)
+        pg("print page :")
+        print(page)
 
     page = web.search("https://www.lemonde.fr/")
     engine.index(page)
-
-    pg = lambda x: print(colored(x.upper(), "green"))
 
     pg("Indexed words :")
     print(engine.indexed_words())
@@ -22,7 +24,7 @@ if __name__ == '__main__':
     pp(engine.indexed_url())
 
     keyword = "guns"
-    keywords = ["japanese"]
+    keywords = ["japaneses", "business"]
 
     pg("Results for %s"% keyword)
     pp(engine.single_search(keyword))
@@ -38,6 +40,7 @@ if __name__ == '__main__':
     pg("Result for international")
     pp(engine.single_search("international"))
 
-    pg("Result for tests for ranking")
+    pg("Result for japanese")
     pp(engine.single_search("japanese"))
+    pg("Result for business")
     pp(engine.single_search("business"))

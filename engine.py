@@ -4,7 +4,6 @@ from page import Page
 class Engine(object):
     def __init__(self):
         self._index = {}
-        self._search_counter = 0
 
     def index(self, page: Page):
         for tag in page.words:
@@ -25,23 +24,22 @@ class Engine(object):
         urls = set()
         for page_set in self._index.values():
             if page_set:
-                page_url = [x for x in page_set]
+                page_url = [x.url for x in page_set]
                 urls = urls.union(page_url)
-        return urls
+        return tuple(urls)
 
     def indexed_words(self):
-        return {x for x in self._index.keys()}
+        return tuple(x for x in self._index.keys())
 
     def single_search(self, word):
         if word.lower() not in self._index:
             return []
         else:
-            result = list(self._index.get(word.lower()))
-            result.sort(key=lambda x: x.words[word], reverse=True)
-            return [("occurrences : %s" % x.words[word], x) for x in result]
+            result = self._index.get(word.lower())
+            print("Found %i results :" % len(result))
+            return tuple(sorted(result, key=lambda k: k.words[word], reverse=True))
 
     def multiple_search(self, words, and_mode=True):
-        self._search_counter += 1
         urls = set()
         if len(words) == 0:
             return []
@@ -49,8 +47,7 @@ class Engine(object):
             for tag in words:
                 urls.update(self.single_search(tag))
         else:
-            tmp = set(self.indexed_url())
-            for tag in words:
-                tmp = tmp.intersection(self.single_search(tag))
-            urls = tmp
-        return list(urls)
+            urls.update(self.single_search(words[0]))
+            for tag in words[1:]:
+                urls = urls.union(self.single_search(tag))
+        return tuple(urls)

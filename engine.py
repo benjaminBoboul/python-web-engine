@@ -1,13 +1,10 @@
 from page import Page
-import string
+
 
 class Engine(object):
     def __init__(self):
         self._index = {}
         self._search_counter = 0
-
-    def _extract_occurency(self, page: Page, keyword: string):
-        pass
 
     def index(self, page: Page):
         for tag in page.words:
@@ -21,17 +18,14 @@ class Engine(object):
             if tag in self._index:
                 if page in self._index[tag]:
                     self._index[tag].remove(page)
-
-                # if len(self._index[tag]) > 1 and page in self._index[tag]:
-                #     self._index[tag].remove(page)
-                # elif len(self._index[tag]) == 1 and page is self._index[tag]:
-                #     del(self._index[tag])
+                    if self._index[tag] is 0:
+                        self._index.pop(tag)
 
     def indexed_url(self):
         urls = set()
         for page_set in self._index.values():
             if page_set:
-                page_url = [x.url for x in page_set]
+                page_url = [x for x in page_set]
                 urls = urls.union(page_url)
         return urls
 
@@ -39,15 +33,25 @@ class Engine(object):
         return {x for x in self._index.keys()}
 
     def single_search(self, word):
-        res = self._index.get(word.lower())
-        if res:
-            return [x for x in res]
+        print("Recherche du terme : %s\n--------------------" % word)
+        if word.lower() not in self._index:
+            return []
+        else:
+            result = list(self._index.get(word.lower()))
+            result.sort(key=lambda x: x.words[word], reverse=True)
+            return [("occurrences : %s" % x.words[word], x) for x in result]
 
     def multiple_search(self, words, and_mode=True):
-        results = set()
-        for word in words:
-            ask = self.single_search(word)
-            if ask:
-                for item in ask:
-                    results.add(item)
-        return results if and_mode else results
+        res = {}
+        for tag in words:
+            res[tag] = self.single_search(tag)
+
+        return res
+
+        # results = set()
+        # for word in words:
+        #     ask = self.single_search(word)
+        #     if ask:
+        #         for item in ask:
+        #             results.add(item)
+        # return results if and_mode else results

@@ -23,4 +23,5 @@ if __name__ == '__main__':
     engine.deindex(page)
     pp(engine.single_search("international"))
 
-    pp(engine.indexed_url())
+    pp(engine.single_search("japanese"))
+    pp(engine.single_search("business"))

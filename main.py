@@ -24,7 +24,7 @@ if __name__ == '__main__':
     pp(engine.indexed_url())
 
     keyword = "guns"
-    keywords = ["japaneses", "business"]
+    keywords = ["japanese", "people"]
 
     pg("Results for %s"% keyword)
     pp(engine.single_search(keyword))

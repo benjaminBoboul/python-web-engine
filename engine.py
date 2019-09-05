@@ -33,21 +33,20 @@ class Engine(object):
 
     def single_search(self, word):
         if word.lower() not in self._index:
-            return []
+            print("Found 0 results for {}".format(word.lower()))
+            return tuple()
         else:
             result = self._index.get(word.lower())
-            print("Found %i results :" % len(result))
+            print("Found {} results for {}.".format(len(result), word.lower()))
             return tuple(sorted(result, key=lambda k: k.words[word], reverse=True))
 
     def multiple_search(self, words, and_mode=True):
-        urls = set()
         if len(words) == 0:
-            return []
-        if not and_mode:
-            for tag in words:
-                urls.update(self.single_search(tag))
+            return tuple()
         else:
-            urls.update(self.single_search(words[0]))
-            for tag in words[1:]:
-                urls = urls.union(self.single_search(tag))
-        return tuple(urls)
+            result = set()
+            result = result | set(self.single_search(words[0]))
+            for word in words[1:]:
+                urls = self.single_search(word)
+                result = result.intersection(urls) if and_mode else result.union(urls)
+            return tuple(result)

@@ -33,7 +33,6 @@ class Engine(object):
         return {x for x in self._index.keys()}
 
     def single_search(self, word):
-        print("Recherche du terme : %s\n--------------------" % word)
         if word.lower() not in self._index:
             return []
         else:
@@ -42,16 +41,16 @@ class Engine(object):
             return [("occurrences : %s" % x.words[word], x) for x in result]
 
     def multiple_search(self, words, and_mode=True):
-        res = {}
-        for tag in words:
-            res[tag] = self.single_search(tag)
-
-        return res
-
-        # results = set()
-        # for word in words:
-        #     ask = self.single_search(word)
-        #     if ask:
-        #         for item in ask:
-        #             results.add(item)
-        # return results if and_mode else results
+        self._search_counter += 1
+        urls = set()
+        if len(words) == 0:
+            return []
+        if not and_mode:
+            for tag in words:
+                urls.update(self.single_search(tag))
+        else:
+            tmp = set(self.indexed_url())
+            for tag in words:
+                tmp = tmp.intersection(self.single_search(tag))
+            urls = tmp
+        return list(urls)
